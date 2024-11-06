@@ -1,0 +1,54 @@
+/* Ensure the body and html take full height */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+}
+
+/* Browser logo */
+#browserLogo {
+  position: relative;  /* Fixed position on screen */
+  top: 0;
+  left: 0;
+  width: 100%;      /* Full width of the screen */
+  max-width: 600px; /* Logo is 3 times larger by default */
+  z-index: 1000;    /* Ensure it stays on top */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#browserLogo img {
+  width: 100%;         /* Make logo image responsive */
+  height: auto;        /* Maintain aspect ratio */
+  max-width: 600px;    /* Max width for logo */
+}
+
+/* Search container styling */
+.searchContainerHardcoded {
+  margin-left: 620px; /* Space for logo (600px) + 20px margin */
+  padding: 20px;
+  flex: 1;            /* Make it take up available space */
+  z-index: 999;       /* Make sure it's below the logo */
+  position: relative;
+  top: 0;             /* Ensure it's aligned with the top */
+}
+
+/* Media query to handle small screens */
+@media screen and (max-width: 768px) {
+  /* Remove the fixed position of the logo and allow it to take full width */
+  #browserLogo {
+    position: relative; /* Allow the logo to be in the normal flow */
+    width: 100%;        /* Full width of the screen */
+  }
+
+  /* Stack the search container directly below the logo on smaller screens */
+  .searchContainerHardcoded {
+    margin-left: 0;         /* No space on the left */
+    margin-top: 0;          /* Remove any margin on top to place directly below the logo */
+    width: 100%;            /* Full width of the screen */
+    text-align: center;     /* Center the text in the search container */
+  }
+}
