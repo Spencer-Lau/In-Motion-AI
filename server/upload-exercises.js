@@ -152,7 +152,7 @@ async function uploadImages(exerciseId, imagePaths) { // upload images to Supaba
       console.error(`Error reading or uploading file: ${imagePath}`, error);
     }
   })
-  await Promise.all(uploadPromises); // Wait for all uploads to complete
+  await Promise.all(uploadPromises); // wait for all uploads to complete
 
   return uploadedImageUrls;
 }

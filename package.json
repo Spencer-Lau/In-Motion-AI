@@ -3,20 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\"",
-    "client": "npm run start --prefix client",
-    "server": "npm run start --prefix server"
+    "start": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\""
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^9.1.0",
-    "nodemon": "^3.1.7"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "pg": "^8.13.1"
+    "concurrently": "^9.1.0"
   }
 }
