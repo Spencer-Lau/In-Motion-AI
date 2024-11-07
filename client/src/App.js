@@ -9,19 +9,29 @@ function App() {
   // no need to re-render the text box, so no need to set state, only want the text
 
   const exerciseSearch = () => {
-    const searchInput = searchInputRef.current.value; // input, assigned the value from the text box/DOM
-    fetch(`http://localhost:8080/api/search?term=${encodeURIComponent(searchInput)}`) // searches database upon submitting search term
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setResponseResults(data);
-        searchInputRef.current.value = '';
-      })
-      .catch((error) => console.error('Error: ', error))
-    };
+    const searchInput = searchInputRef.current.value.trim();; // input, assigned the value from the text box/DOM
+    if (searchInput) {
+      fetch(`http://localhost:8080/api/search?id=${encodeURIComponent(searchInput)}`) // searches database upon submitting search Id/term
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch data from the server');
+          }
+          console.log(response);
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setResponseResults(data); // sets responseResults state to the data returned from the db
+          searchInputRef.current.value = ''; // resets search box to an empty string after each search
+        })
+        .catch((error) => {
+          console.error('Error: ', error);
+          alert('Something went wrong. Please try again.');
+        });
+    } else {
+      alert('Please enter a search term');
+    }
+  };
 
   return (
     <div className="searchContainer">
@@ -30,7 +40,7 @@ function App() {
         <h1>Exercise Search</h1>
         <input
         type="text"
-        id="searchTerm"
+        id="searchId"
         placeholder="Search exercises by name"
         ref={searchInputRef} // once this element is rendered, React assigns the input field to searchInputRef.current, allows direct interaction after
         onKeyDown={ // search triggers on pressing enter or with button click below

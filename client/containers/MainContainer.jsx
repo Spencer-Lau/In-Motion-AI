@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import Logo from '../components/Logo.jsx';
 import SearchContainer from '../components/SearchContainer.jsx';
 import ResultsDisplay from './ResultsDisplay.jsx';
