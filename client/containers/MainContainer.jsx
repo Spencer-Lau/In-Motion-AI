@@ -1,3 +1,4 @@
+// NOT UTILIZED
 import React from 'react';
 import Logo from '../components/Logo.jsx';
 import SearchContainer from '../components/SearchContainer.jsx';
@@ -8,7 +9,7 @@ const MainContainer = () => {
   return (
     <div className='mainContainer'>
       <Logo/>
-      <h1 id='searchHeader'>Exercie Search</h1>
+      <h1 id='searchHeader'>Exercise Search</h1>
       <SearchContainer />
       <ResultsDisplay />
     </div>

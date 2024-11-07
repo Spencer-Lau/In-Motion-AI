@@ -1,128 +1,87 @@
-body, html {                            /* Ensure the body and html take full height */
+body, html {
   margin: 0;
   padding: 0;
   height: 100%;
   display: flex;
-  flex-direction: column;               /* Stack elements vertically */
+  flex-direction: column; /* Stack all elements vertically */
 }
 
-#appContainer {                         /* This container holds both the logo and input container */
-  display: flex;                        /* Use flexbox to align items horizontally */
-  justify-content: flex-start;          /* Align items to the start (left) */
-  align-items: flex-start;              /* Align items to the top */
-  /* height: auto;                         /* Height adjusts automatically */
-  width: 100%;                          /* Full width */
-  position: relative;                   /* Position for the sticky inputContainer */
-  /* transition: all 0.3s ease;           /* Smooth transition for layout changes */
-
+#appContainer {
+  display: flex; /* Flexbox for layout */
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Align all items to the left */
+  width: 100%; /* Full width */
+  position: relative; /* Position relative for better control */
+  padding: 20px; /* Padding for spacing */
+  box-sizing: border-box; /* Include padding in width/height calculations */
 }
 
 #browserLogo {
-  position: relative;                   /* Normal flow, not fixed */
-  top: 0;
-  left: 0;
-  width: 50%;                           /* Take 50% of the screen width */
-  max-width: 600px;                     /* Max width for the logo */
-  min-width: 300px;                     /* Prevent shrinking too small */
-  z-index: 1000;                        /* Ensure it stays on top */
   display: flex;
-  justify-content: center;              /* Center the logo horizontally */
-  align-items: center;                  /* Center the logo vertically */
+  justify-content: center; /* Center the logo horizontally */
+  align-items: center; /* Center the logo vertically */
+  width: 100%; /* Full width of the container */
+  max-width: 100%; /* Ensure it doesn’t grow beyond 100% */
+  height: auto; /* Maintain aspect ratio */
+  flex-grow: 0; /* Prevent scaling more than needed */
+  min-width: 300px; /* Prevent the logo from getting too small */
 }
 
 #browserLogo img {
-  width: 100%;                          /* Make logo image responsive */
-  height: auto;                         /* Maintain aspect ratio */
-  max-width: 500px;                     /* Max width for logo */
-  min-width: 300px;                     /* Prevent the logo from shrinking too small */
+  width: 100%;
+  height: auto; /* Keep aspect ratio */
+  max-width: 500px; /* Maximum logo width */
+  min-width: 300px; /* Minimum logo width */
 }
 
-#appContainer.resultsVisible {          /* When #resultsContainer is rendered, we freeze the logo size and layout */
-  flex-direction: column;               /* Stack elements vertically when results are shown */
-}
-
-#appContainer.resultsVisible #browserLogo {
-  width: 600px;                         /* Fix the logo width */
-  flex: 0 0 600px;                      /* Prevent logo from flexing further */
-}
-      
 .inputContainer {
-  display: flex;
-  flex-direction: column;               /* Stack input and heading vertically */
-  align-items: center;                  /* Center the input and heading */
-  margin-top: 20px;
-  width: 50%;                           /* Take the other 50% of the screen */
-  padding-left: 20px;                   /* Padding between logo and input */
-  z-index: 999;                         /* Keep input container below logo */
-  position: relative;                   /* Will be controlled on scroll */
+  display: flex; /* Flexbox to arrange the elements in a row */
+  align-items: center; /* Align items vertically centered */
+  justify-content: flex-start; /* Align elements to the left */
+  width: 100%; /* Full width */
+  margin-top: 10px; /* Space between logo and input */
+  padding: 10px 0;
+  gap: 20px; /* Add spacing between header, input, and button */
 }
 
 .inputContainer h1 {
-  font-size: 2em;
-  margin-bottom: 10px;
+  font-size: 2em; /* Larger heading */
+  margin: 0; /* No margin for header */
+  white-space: nowrap; /* Prevent heading from wrapping */
 }
 
 .inputContainer input {
-  width: 70%;                           /* Input takes up 70% of the container width */
+  width: 250px; /* Set width for the input field */
   padding: 10px;
-  margin-bottom: 10px;
   font-size: 1em;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-@media screen and (max-width: 768px) {  /* Media query to handle small screens (mobile responsiveness) */
-  #appContainer {
-    flex-direction: column;             /* Stack elements vertically on smaller screens */
-    align-items: flex-start;            /* Align to the top */
-    padding: 10px;                      /* Add padding to the container */
-  }
-
-  #browserLogo {
-    position: relative;                 /* Allow the logo to be in the normal flow */
-    width: 100%;                        /* Logo takes up full width */
-    max-width: none;                    /* Remove max-width restriction */
-    margin-bottom: 20px;                /* Space between logo and input */
-  }
-
-  .inputContainer {
-    position: sticky;                   /* Make the input container sticky */
-    top: 0;                             /* Stick to the top once it's scrolled */
-    width: 100%;                        /* Full width of the screen */
-    padding-left: 0;                    /* Remove left padding */
-    margin-top: 0;                      /* Remove top margin */
-    z-index: 999;                       /* Make sure it's on top */
-  }
-}
-
-#searchButton {                         /* Button styling */
-  /* padding: 10px 15px;
+.inputContainer .searchButton {
+  padding: 10px 15px;
   font-size: 1em;
   background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 5px;
-  cursor: pointer; */
+  cursor: pointer;
 }
 
-#searchButton:hover {
-  /* background-color: #45a049; */
+.inputContainer .searchButton:hover {
+  background-color: #45a049;
 }
 
-.resultsContainer {                     /* Styling for the results container */
-  position: absolute;                   /* Take it out of normal document flow */
-  top: 0;                               /* Align to the top of the page */
-  left: 0;                              /* Align to the left of the page */
-  width: 100%;                          /* Take full width of the screen */
-  margin-top: 20px;
+.resultsContainer {
+  display: flex;
+  flex-direction: column; /* Stack results vertically */
+  position: relative;
+  width: 100%; /* Full width */
   padding: 15px;
+  margin-top: 20px;
   border-top: 1px solid #ddd;
-  /* max-width: 100%; */
-  /* margin-left: auto;
-  margin-right: auto; */
-  height: calc(100vh - 100px);          /* Adjust height to keep space for header */
-  overflow-y: auto;                     /* Enable scrolling */
-  flex-grow: 1;                         /* Allow it to take remaining space */
+  height: calc(100vh - 160px); /* Height adjusted to avoid overlap with input */
+  overflow-y: auto; /* Enable scrolling if needed */
 }
 
 .resultsContainer ul {
@@ -133,4 +92,66 @@ body, html {                            /* Ensure the body and html take full he
 .resultsContainer li {
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+}
+
+/* Media Query for Large Screens */
+@media screen and (min-width: 769px) {
+  #appContainer {
+    flex-direction: column; /* Keep stacking vertically on large screens */
+    align-items: flex-start; /* Keep everything left-aligned */
+    width: 100%; /* Full width */
+    padding: 0; /* Remove extra padding for large screens */
+  }
+
+  #browserLogo {
+    width: 66.66%; /* Take up 2/3 of the screen width */
+    max-width: 500px; /* Max width for the logo */
+    min-width: 300px; /* Prevent it from shrinking too small */
+    flex-grow: 0; /* Don't let it grow further */
+  }
+
+  .inputContainer {
+    width: 100%; /* Full width input container on large screens */
+    margin-top: 20px; /* Space between logo and input */
+    justify-content: flex-start; /* Align items to the left */
+  }
+
+  /* Ensure the search input and button stay in a row */
+  .inputContainer input,
+  .inputContainer .searchButton {
+    width: auto; /* Allow input field and button to shrink/grow based on content */
+  }
+}
+
+/* Media Query for Small Screens */
+@media screen and (max-width: 768px) {
+  #appContainer {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the left */
+    padding: 20px; /* Padding for mobile */
+  }
+
+  #browserLogo {
+    width: 100%; /* Logo takes full width on mobile */
+    margin-bottom: 20px; /* Add space between logo and input */
+  }
+
+  .inputContainer {
+    width: 100%; /* Full width input container on mobile */
+    padding: 0; /* Remove left padding on mobile */
+    margin-top: 0;
+    justify-content: center; /* Center the content */
+    gap: 10px; /* Ensure spacing is consistent between elements */
+  }
+
+  .inputContainer input,
+  .inputContainer .searchButton {
+    width: 100%; /* Full width for input and button on mobile */
+    margin-bottom: 10px; /* Space between input and button */
+  }
+
+  .inputContainer .searchButton {
+    margin-left: 0; /* Remove left margin on small screens */
+    width: auto; /* Set button width to auto to fit the content */
+  }
 }
