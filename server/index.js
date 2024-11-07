@@ -26,39 +26,34 @@ app.use('/api', exerciseRoutes); // default for requests with /api endpoint to u
 
 app.use(express.static(join(__dirname, '../client/build'))); // Serve static files from the 'build' directory
 
-app.get('/api/search', async (req, res) => {
-  const { id } = req.query; // get 'term' query parameter from the request URL/frontend
-  console.log(`Searching for: ${id}`); // log search id/term
-
-  if (!id) {
-    return res.status(400).json({ error: 'Please provide a search term' });
-  }
-
-  try {
-    const { data, error } = await supabase // query Supabase
-      .from('exercises') // from exercises table
-      .select('*')
-      .ilike('id', `%${id}%`); // ilike is a case-insensitive partial match operator, searching for rows where id partially matches term
-
-    if (data.length === 0) {
-      return res.status(404).json({ error: 'No exercises found' });
-    }
-      
-    if (error) {
-      console.error('Error querying Supabase:', error.message);
-      return res.status(500).json({
-        error: 'Database query error',
-        details: error.message
-      });
-    }
-    
-
-    res.json(data); // send matching exercises data as JSON back to frontend 
-  } catch (err) {
-    console.error('Error in /api/search:', err);
-    res.status(500).json({ error: 'Server error', details: err.message });
-  }
-});
+// Redundant code that is handled in the route/middleware, specifically exerciseController.searchExercises
+// app.get('/api/search', async (req, res) => {
+//   const { id } = req.query; // get 'term' query parameter from the request URL/frontend
+//   console.log(`Searching for: ${id}`); // log search id/term
+//   if (!id) {
+//     return res.status(400).json({ error: 'Please provide a search term' });
+//   }
+//   try {
+//     const { data, error } = await supabase // query Supabase
+//       .from('exercises') // from exercises table
+//       .select('*')
+//       .ilike('id', `%${id}%`); // ilike is a case-insensitive partial match operator, searching for rows where id partially matches term
+//     if (data.length === 0) {
+//       return res.status(404).json({ error: 'No exercises found' });
+//     }
+//     if (error) {
+//       console.error('Error querying Supabase:', error.message);
+//       return res.status(500).json({
+//         error: 'Database query error',
+//         details: error.message
+//       });
+//     }
+//     res.json(data); // send matching exercises data as JSON back to frontend 
+//   } catch (err) {
+//     console.error('Error in /api/search:', err);
+//     res.status(500).json({ error: 'Server error', details: err.message });
+//   }
+// });
 
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../client/build', 'index.html'));

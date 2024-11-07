@@ -35,8 +35,7 @@ function App() {
 
   return (
     <div className="searchContainer">
-      <header className="searchHeader">
-      </header>
+      <div className="inputContainer">
         <h1>Exercise Search</h1>
         <input
         type="text"
@@ -52,8 +51,9 @@ function App() {
         }
         />
         <button id="searchButton" onClick={exerciseSearch}>Search</button>
-        
-        <div id="searchResults">
+      </div>
+
+      <div id="searchResults" className="resultsContainer">
         {responseResults.length > 0 ? ( // if there is 1 or more results in the responseResults array
           <ul>
             {responseResults.map((exercise) => ( // map the array, a list item for each element
