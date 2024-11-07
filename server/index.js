@@ -12,14 +12,15 @@ const app = express(); // app, new instance of Express()
 
 // console.log(app); // to see the methods that come with Express app
 
-app.use(cors({origin: 'http://localhost:3000'})); // allows frontend to make requests to the backend (CORS middleware)
-app.use(express.json()); // automatically parse incoming JSON requests/bodies/payloads
-
 // get __dirname in an ES Module environment
 const __filename = fileURLToPath(import.meta.url); // converts the current module's URL to a file path
 const __dirname = dirname(__filename); // gets the directory name of the current module
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY)
+
+const allowedOrigin = process.env.NODE_ENV === 'production' ? 'https://your-production-domain.com' : 'http://localhost:3000'; // production vs development URL
+app.use(cors({origin: allowedOrigin})); // allows frontend to make requests to the backend (CORS middleware)
+app.use(express.json()); // automatically parse incoming JSON requests/bodies/payloads
 
 app.use('/api', exerciseRoutes); // default for requests with /api endpoint to use exerciseRoutes
 
@@ -58,10 +59,6 @@ app.get('/api/search', async (req, res) => {
     res.status(500).json({ error: 'Server error', details: err.message });
   }
 });
-
-app.get('/', (req, res) => { // GET request to root endpoint, can access req to server or res to client
-  res.send('req recieved')
-})
 
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../client/build', 'index.html'));
