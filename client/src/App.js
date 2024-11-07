@@ -1,5 +1,4 @@
-import React from 'react'; // import React
-import { useState, useRef } from 'react'; // import useState (to manage state) and useRef (creates a reference) React hooks 
+import React, { useState, useRef } from 'react'; // import React and useState (to manage state) and useRef (creates a reference) React hooks 
 import './App.css'; // import App.css/styling
 
 function App() {
@@ -34,25 +33,30 @@ function App() {
   };
 
   return (
-    <div className="searchContainer">
-      <div className="inputContainer">
-        <h1>Exercise Search</h1>
-        <input
-        type="text"
-        id="searchId"
-        placeholder="Search exercises by name"
-        ref={searchInputRef} // once this element is rendered, React assigns the input field to searchInputRef.current, allows direct interaction after
-        onKeyDown={ // search triggers on pressing enter or with button click below
-          (e) => {
-            if (e.key === 'Enter') {
-              exerciseSearch();
-            }
-          }
-        }
-        />
-        <button id="searchButton" onClick={exerciseSearch}>Search</button>
+    <div id="appContainer">
+      <div id="browserLogo">
+        <img src="/Shirt Logo Draft.png" alt="Logo" />
+        {/* <img src="/l-intro-1630426166.jpg" alt="pic1" />
+        <img src="/istockphoto-1322887164-612x612.jpg" alt="pic2" />
+        <img src="/no-such-thing-as-a-bad-workout-1.jpg" alt="pic3" /> */}
       </div>
-
+      <div className="searchContainer">
+        <div className="inputContainer">
+          <h1>Exercise Search</h1>
+          <input
+            type="text"
+            id="searchId"
+            placeholder="Search exercises by name"
+            ref={searchInputRef} // once this element is rendered, React assigns the input field to searchInputRef.current, allows direct interaction after
+            onKeyDown={(e) => { // search triggers on pressing enter or with button click below
+              if (e.key === 'Enter') {
+                exerciseSearch();
+              }
+            }}
+            />
+          <button id="searchButton" onClick={exerciseSearch}>Search</button>
+        </div>
+      </div>
       <div id="searchResults" className="resultsContainer">
         {responseResults.length > 0 ? ( // if there is 1 or more results in the responseResults array
           <ul>
