@@ -113,11 +113,26 @@ function App() {
         {responseResults.length > 0 ? ( // if there is 1 or more results in the responseResults array
           <ul>
             {responseResults.map((exercise) => ( // map the array, a list item for each element
-              <li key={exercise.id}>{exercise.name} - {exercise.instructions}</li> // each list item has the specified info from the db row/entry
+              <li key={exercise.id}>
+                <h3>{exercise.name}</h3>
+                {Array.isArray(exercise.images) ? (
+                  exercise.images.map((imageUrl, index) => (
+                    // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                    <img
+                      key={index}
+                      src={imageUrl}
+                      alt={`Exercise Image ${index + 1}`}
+                      style={{ maxWidth: '20%', height: 'auto', marginBottom: '10px' }} // style the images if needed
+                    />
+                  ))
+                ) : (
+                  <p>No images available</p> // Fallback if `exercise.images` isn't an array
+                )}
+              </li> // each list item has the specified info from the db row/entry
             ))}
           </ul>
         ) : ( // if no results returned, display the <p>/string
-          <p>No exercises found</p>
+          <p>Please search for an exercise</p>
         )}
       </div>
     </div>

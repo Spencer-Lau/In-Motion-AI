@@ -28,7 +28,7 @@ body, html {
 }
 
 #browserLogo img {
-  width: 600px; /* Set default width to 600px */
+  width: 500px; /* Set default width to 600px */
   height: auto; /* Maintain aspect ratio */
   max-width: 100%; /* Ensure it scales down on smaller screens */
   min-width: 300px; /* Prevent logo from getting too small */
@@ -40,7 +40,7 @@ body, html {
   justify-content: flex-start; /* Align elements to the left */
   width: 100%; /* Full width */
   margin-top: 10px; /* Space between logo and input */
-  padding: 10px 0;
+  padding: 0px 0;
 }
 
 .inputContainer input {
