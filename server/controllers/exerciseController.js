@@ -2,7 +2,7 @@ import db from '../models/exerciseModels.js';
 
 const exerciseController = {};
 
-exerciseController.searchExercises = async (req, res, next) => {
+exerciseController.searchExercises = async (req, res, next) => { // controller handling exercise search with dynamic query parameters
   const { id, muscle, category } = req.query; // get the search parameters from the query
   
   if (!id && !muscle && !category) { // if no filter or search term is provided
@@ -13,24 +13,22 @@ exerciseController.searchExercises = async (req, res, next) => {
   let query = 'SELECT exercises.* FROM exercises WHERE 1=1'; // '1=1' is just a placeholder for the WHERE clause
   const queryParams = [];
 
-  // const query = `SELECT exercises.* FROM exercises WHERE exercises.id ILIKE $1`;
-  
   if (id) {
-    query += ' AND exercises.id ILIKE $1'; // add condition for searching by id
+    query += ` AND exercises.id ILIKE $${queryParams.length + 1}`; // add condition for searching by id
     queryParams.push(`%${id}%`);
   }
 
   if (muscle) {
-    query += ' AND (exercises."primaryMuscles" @> $2 OR exercises."secondaryMuscles" @> $2)'; // filter by muscle
-    queryParams.push(muscle); // assuming `muscle` is a string (e.g., 'biceps')
+    query += ` AND (exercises."primaryMuscles" @> $${queryParams.length + 1} OR exercises."secondaryMuscles" @> $${queryParams.length + 1})`; // filter by muscle
+    queryParams.push(`{${muscle}}`); // array syntax for muscle matching, does not work as a string (queryParams.push(muscle)), error
   }
 
   if (category) {
-    query += ' AND exercises.category = $3'; // filter by category
+    query += ` AND exercises.category = $${queryParams.length + 1}`; // filter by category
     queryParams.push(category); // assuming `category` is a string (e.g., 'strength')
   }
 
-  try {
+  try { // execute query and handle response
     const result = await db.query(query, queryParams); // execute the query with the dynamic conditions
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'No exercises found' });
@@ -45,18 +43,15 @@ exerciseController.searchExercises = async (req, res, next) => {
   }
 };
 
-exerciseController.getUniqueMuscles = async (req, res, next) => { // middleware to get unique muscles from the database
+exerciseController.getUniqueMuscles = async (req, res, next) => { // middleware fetches unique muscles for dropdown from database
   try { // query to get distinct primary muscles
-    const query = `SELECT DISTINCT UNNEST (exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL UNION SELECT DISTINCT UNNEST (exercises."secondaryMuscles") AS muscle FROM exercises WHERE exercises."secondaryMuscles" IS NOT NULL`;
+    const query = `SELECT DISTINCT UNNEST(exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL
+      UNION
+      SELECT DISTINCT UNNEST(exercises."secondaryMuscles") AS muscle FROM exercises WHERE exercises."secondaryMuscles" IS NOT NULL;`;
     const result = await db.query(query);
-    
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'No muscles found' });
-    }
-    
-    req.uniqueMuscles = result.rows.map(row => row.muscle); // attach the unique muscles to the request object
-    // console.log('Unique Muscles:', req.uniqueMuscles); // debug log to see if muscles are being fetched
-    return next(); // pass control to the next middleware or route handler
+
+    req.uniqueMuscles = result.rows.map(row => row.muscle);
+    return next();
   } catch (error) {
     console.error('Error fetching unique muscles:', error);
     return next({
@@ -66,17 +61,12 @@ exerciseController.getUniqueMuscles = async (req, res, next) => { // middleware 
   }
 };
 
-exerciseController.getUniqueCategories = async (req, res, next) => { // middleware to get unique categories from the database
+exerciseController.getUniqueCategories = async (req, res, next) => { // middleware fetches unique categories from the database
   try { // query to get distinct categories
     const query = `SELECT DISTINCT category FROM exercises WHERE category IS NOT NULL`;
     const result = await db.query(query);
     
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'No categories found' });
-    }
-    
     req.uniqueCategories = result.rows.map(row => row.category); // attach the unique categories to the request object
-    // console.log('Unique Categories:', req.uniqueCategories); // debug log to see if categories are being fetched
     return next(); // pass control to the next middleware or route handler
   } catch (error) {
     console.error('Error fetching unique categories:', error);

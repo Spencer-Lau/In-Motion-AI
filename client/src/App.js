@@ -13,8 +13,8 @@ function App() {
   const [categoryOptions, setCategoryOptions] = useState([]); // state for category options
 
   useEffect(() => {
-    console.log('Muscle selected:', muscle);  // Log muscle selection
-    console.log('Category selected:', category);  // Log category selection
+    console.log('Muscle selected:', muscle);  // log muscle selection
+    console.log('Category selected:', category);  // log category selection
   }, [muscle, category]); // Re-run this when either muscle or category changes
   
   useEffect(() => { // fetch muscle and category options from backend
@@ -49,11 +49,7 @@ function App() {
       return;
     }
 
-    // console.log('Sending query params:', queryParams); // debugging: log the queryParams object to see what we're sending
-
     const query = new URLSearchParams(queryParams).toString(); // construct the query string using URLSearchParams
-
-    // console.log('Final query string:', query); // debugging: Log the final query string
 
     fetch(`http://localhost:8080/api/search?${query}`)
       .then((response) => {
