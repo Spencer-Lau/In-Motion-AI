@@ -1,22 +1,24 @@
 import express from 'express'; // import Express
 import path from 'path';
 import cors from 'cors';
-import exerciseRoutes from './routes/exerciseRoutes.js'; // Import exercise routes
+import dotenv from 'dotenv'; // for loading environment variables
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv'; // for loading environment variables
+import exerciseRoutes from './routes/exerciseRoutes.js'; // import exercise routes
+import exerciseController from './controllers/exerciseController.js'; // import the controller for exercises
+
 dotenv.config(); // ensure the environment variables are loaded
 
 const app = express(); // app, new instance of Express()
 
 // console.log(app); // to see the methods that come with Express app
 
-// get __dirname in an ES Module environment
+// get __dirname is an ES Module environment
 const __filename = fileURLToPath(import.meta.url); // converts the current module's URL to a file path
 const __dirname = dirname(__filename); // gets the directory name of the current module
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY)
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY) // initialize Supabase client
 
 const allowedOrigin = process.env.NODE_ENV === 'production' ? 'https://your-production-domain.com' : 'http://localhost:3000'; // production vs development URL
 app.use(cors({origin: allowedOrigin})); // allows frontend to make requests to the backend (CORS middleware)
@@ -24,7 +26,7 @@ app.use(express.json()); // automatically parse incoming JSON requests/bodies/pa
 
 app.use('/api', exerciseRoutes); // default for requests with /api endpoint to use exerciseRoutes
 
-app.use(express.static(join(__dirname, '../client/build'))); // Serve static files from the 'build' directory
+app.use(express.static(join(__dirname, '../client/build'))); // serve static files from the 'build' directory
 
 // Redundant code that is handled in the route/middleware, specifically exerciseController.searchExercises
 // app.get('/api/search', async (req, res) => {
@@ -54,6 +56,13 @@ app.use(express.static(join(__dirname, '../client/build'))); // Serve static fil
 //     res.status(500).json({ error: 'Server error', details: err.message });
 //   }
 // });
+
+app.get('/api/unique-values', exerciseController.getUniqueMuscles, exerciseController.getUniqueCategories, (req, res) => { // route to fetch unique values (muscles & categories)
+  res.json({ // this handler is called after both the middleware functions have executed successfully
+    muscles: req.uniqueMuscles, // muscles array will be attached to req by getUniqueMuscles
+    categories: req.uniqueCategories, // categories array will be attached to req by getUniqueCategories
+  });
+});
 
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../client/build', 'index.html'));

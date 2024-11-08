@@ -52,6 +52,16 @@ body, html {
   margin-right: 0; /* Ensure no margin to the right of the input */
 }
 
+.inputContainer select {
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 42px; /* Match input and button height */
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
 .inputContainer button {
   padding: 10px 15px;
   font-size: 1em;
