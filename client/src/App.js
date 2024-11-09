@@ -11,6 +11,7 @@ function App() {
 
   const [muscleOptions, setMuscleOptions] = useState([]); // state for muscle options
   const [categoryOptions, setCategoryOptions] = useState([]); // state for category options
+  const [expandedExerciseId, setExpandedExerciseId] = useState(null); // state to track expanded exercise on hover
 
   useEffect(() => {
     console.log('Muscle selected:', muscle);  // log muscle selection
@@ -21,9 +22,7 @@ function App() {
     const fetchOptions = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/unique-values');
-        if (!response.ok) {
-          throw new Error('Failed to fetch options');
-        }
+        if (!response.ok) throw new Error('Failed to fetch options');
         const data = await response.json();
         setMuscleOptions(data.muscles); // set muscle options
         setCategoryOptions(data.categories); // set category options
@@ -31,11 +30,10 @@ function App() {
         console.error('Error fetching options:', error);
       }
     };
-  
     fetchOptions();
   }, []); // empty dependency array means this effect runs once when the component mounts
 
-  const exerciseSearch = () => {
+  const exerciseSearch = async () => {
     const searchInput = searchInputRef.current.value.trim(); // get the search term
     const queryParams = {};
     
@@ -51,19 +49,16 @@ function App() {
 
     const query = new URLSearchParams(queryParams).toString(); // construct the query string using URLSearchParams
 
-    fetch(`http://localhost:8080/api/search?${query}`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Failed to fetch data from the server');
-        return response.json();
-      })
-      .then((data) => {
-        setResponseResults(data); // sets responseResults state with the search results
-        searchInputRef.current.value = ''; // resets search box to an empty string after each search
-      })
-      .catch((error) => {
-        console.error('Error: ', error);
-        alert('Something went wrong. Please try again.');
-      });
+    try {
+      const response = await fetch(`http://localhost:8080/api/search?${query}`);
+      if (!response.ok) throw new Error('Failed to fetch data from the server');
+      const data = await response.json();
+      setResponseResults(data); // sets responseResults state with the search results
+      searchInputRef.current.value = ''; // resets search box to an empty string after each search
+    } catch (error) {
+      console.error('Error: ', error);
+      alert('Something went wrong. Please try again.');
+    }
   };
 
   return (
@@ -86,7 +81,7 @@ function App() {
               if (e.key === 'Enter') exerciseSearch();
             }}
           />
-          <select
+          <select 
             value={muscle}
             onChange={(e) => setMuscle(e.target.value)} // update muscle state
             placeholder="Select Muscle"
@@ -127,6 +122,21 @@ function App() {
                   ))
                 ) : (
                   <p>No images available</p> // Fallback if `exercise.images` isn't an array
+                )}
+                <button
+                  onMouseEnter={() => setExpandedExerciseId(exercise.id)}
+                  onMouseLeave={() => setExpandedExerciseId(null)}
+                >
+                  Hover to Expand
+                </button>
+                {expandedExerciseId === exercise.id && (
+                  <div className="expandedDetails">
+                    <p>Force: {exercise.force}</p>
+                    <p>Level: {exercise.level}</p>
+                    <p>Mechanic: {exercise.mechanic}</p>
+                    <p>Equipment: {exercise.equipment}</p>
+                    <p>Instructions: {exercise.instructions}</p>
+                  </div>
                 )}
               </li> // each list item has the specified info from the db row/entry
             ))}

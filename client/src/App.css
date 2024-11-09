@@ -130,6 +130,19 @@ body, html {
   }
 }
 
+button:hover {
+  cursor: pointer;
+  background-color: #ddd;
+}
+
+.expandedDetails {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #aaa; /* Light gray border */
+  border-radius: 5px; /* Round the corners */
+  background-color: #f9f9f9;
+}
+
 /* Media Query for Small Screens */
 @media screen and (max-width: 768px) {
   #appContainer {
