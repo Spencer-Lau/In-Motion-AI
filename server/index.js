@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url); // converts the current modul
 const __dirname = dirname(__filename); // gets the directory name of the current module
 // const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY) // initialize Supabase client
 
-const allowedOrigin = process.env.NODE_ENV === 'production' ? 'http://localhost:8080' /* https://your-production-domain.com' */ : 'http://localhost:3000'; // set up CORS based on environment, production vs development URL
+const allowedOrigin = process.env.NODE_ENV === 'production' ? 'http://localhost:3000' /* https://your-production-domain.com' */ : 'http://localhost:3000'; // set up CORS based on environment, production vs development URL
 app.use(cors({ origin: allowedOrigin })); // allows frontend to make requests to the backend (CORS middleware)
 app.use(express.json()); // parses incoming JSON requests/bodies/payloads
 

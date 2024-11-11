@@ -21,9 +21,13 @@ Goals
 
 ✨ ✨ ✨ ✨ ✨ TESTING APP VIA LIVE SHARE ✨ ✨ ✨ ✨ ✨
 
-Join Live Share
-npm install to install dependencies
-npm run build to build the React app
+• Join Live Share
+
+• npm install to install dependencies
+
+• npm run prod to build the React frontend and start the backend server
+
+• http://localhost:8080 to access the frontend and backend in a browser
 
 ✨ ✨ ✨ ✨ ✨ SETTING SUPABASE BUCKET POLICIES TO IMPORT IMAGES ✨ ✨ ✨ ✨ ✨
 
