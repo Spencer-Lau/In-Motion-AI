@@ -8,20 +8,18 @@ import exerciseRoutes from './routes/exerciseRoutes.js'; // import exercise rout
 dotenv.config(); // ensure the environment variables are loaded
 
 const app = express(); // app, new instance of Express()
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080; // use port from .env or default to 8080
 
 // get __dirname is an ES Module environment
 const __filename = fileURLToPath(import.meta.url); // converts the current module's URL to a file path
 const __dirname = dirname(__filename); // gets the directory name of the current module
 // const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY) // initialize Supabase client
 
-const allowedOrigin = process.env.NODE_ENV === 'production' ? 'https://your-production-domain.com' : 'http://localhost:3000'; // set up CORS based on environment, production vs development URL
+const allowedOrigin = process.env.NODE_ENV === 'production' ? 'http://localhost:8080' /* https://your-production-domain.com' */ : 'http://localhost:3000'; // set up CORS based on environment, production vs development URL
 app.use(cors({ origin: allowedOrigin })); // allows frontend to make requests to the backend (CORS middleware)
 app.use(express.json()); // parses incoming JSON requests/bodies/payloads
 
 app.use('/api', exerciseRoutes); // default for requests with /api endpoint to use exerciseRoutes
-
-app.use(express.static(join(__dirname, '../client/build'))); // serve static files from the 'build' directory
 
 app.get('/api/unique-values', (req, res) => { // route to fetch unique values (muscles & categories)
   res.json({ // this handler is called after both the middleware functions have executed successfully
@@ -30,13 +28,19 @@ app.get('/api/unique-values', (req, res) => { // route to fetch unique values (m
   });
 });
 
-app.get('*', (req, res) => { // catch-all route to serve the client app for undefined routes
-  res.sendFile(join(__dirname, '../client/build', 'index.html'));
-});
+if (process.env.NODE_ENV === 'production') { // serve static files from the 'build' directory of the React app
+  app.use(express.static(join(__dirname, '../client/build'))); // serve static files from the 'build' directory
+
+  app.get('*', (req, res) => { // catch-all route to handle GET requests and serve index.html, the React entry point
+    res.sendFile(join(__dirname, '../client/build', 'index.html'));
+  });
+} else { // in development mode, React app served by React dev server
+  console.log('In development mode, React app is served by React development server');
+}
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => { // global error handling middleware
-  console.error('Error occurred:', err); // Log the full error object for debugging
+  console.error('Error occurred:', err); // log the full error object for debugging
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',
     status: 500,
@@ -47,6 +51,6 @@ app.use((err, req, res, next) => { // global error handling middleware
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-app.listen(8080, () => { // start server
-  console.log('server listening on port 8080')
+app.listen(PORT, () => { // start server
+  console.log(`server listening on port ${PORT}`)
 });

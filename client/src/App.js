@@ -24,8 +24,12 @@ function App() {
         const response = await fetch('http://localhost:8080/api/unique-values');
         if (!response.ok) throw new Error('Failed to fetch options');
         const data = await response.json();
-        setMuscleOptions(data.muscles); // set muscle options
-        setCategoryOptions(data.categories); // set category options
+        
+        const sortedMuscles = data.muscles.sort((a, b) => a.localeCompare(b)); // sort muscle options
+        const sortedCategories = data.categories.sort((a, b) => a.localeCompare(b)); // sort category options
+
+        setMuscleOptions(sortedMuscles); // set muscle options/state after sorting
+        setCategoryOptions(sortedCategories); // set category options/state after sorting
       } catch (error) {
         console.error('Error fetching options:', error);
       }

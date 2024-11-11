@@ -1,20 +1,31 @@
 # CS-SoloProject2
-
+✨ ✨ ✨ ✨ ✨ PROJECT GOAL & STRETCH FEATURES ✨ ✨ ✨ ✨ ✨
 
 Goals
 <!-- 1. Creating a supabase database from the github repo database -->
 <!-- 2. Having a functioning front end -->
-<!-- 3. Ability to query the supbase-db by id partial match and getting at least one exercise -->
+<!-- 3. Ability to query the supbase-db by id partial match and getting at least one exercise (MVP) -->
 <!-- 4. Ability to query and return all appropriate exercises -->
-5. Ability to query by id, category, and/or primaryMuscle
-6. Ability to save exercises to a list (marketList?)
-7. Ability to delete exercises from a list (marketList?)
+<!-- 5. Ability to query by id, category, and/or primaryMuscle -->
+6. Ability to save exercises to a list (e.g., marketList?)
+7. Ability to delete exercises from a list (e.g., marketList?)
 8. Ability to create and save user accounts
 9. Ability to delete user accounts
 10. Ability to save and delete a list to a user's account
-11. Utilize .env to improve safety
+<!-- 11. Utilize .env to improve security -->
 00. Styling
 
+✨ ✨ ✨ ✨ ✨ REQUEST-RESPONSE CYCLE / DATA FLOW ✨ ✨ ✨ ✨ ✨
+
+
+
+✨ ✨ ✨ ✨ ✨ TESTING APP VIA LIVE SHARE ✨ ✨ ✨ ✨ ✨
+
+Join Live Share
+npm install to install dependencies
+npm run build to build the React app
+
+✨ ✨ ✨ ✨ ✨ SETTING SUPABASE BUCKET POLICIES TO IMPORT IMAGES ✨ ✨ ✨ ✨ ✨
 
 Steps to create public policies for uploads, deletions, and reads:
 In Supabase, you can configure public access for your storage bucket by defining policies that allow anyone (unauthenticated users) to interact with the bucket.
