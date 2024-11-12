@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'; // import React and 
 import './App.css'; // import App.css/styling
 
 function App() {
-  // const [searchEntry, setSearchEntry] = useState(''); // sets state for searchEntry to user input text (ref: unit6TicTacToe)
+  // const [searchEntry, setSearchEntry] = useState(''); // sets state for searchEntry to user input text (ref: Unit6 TicTacToe)
   const [responseResults, setResponseResults] = useState([]); // sets state for responseResults to results of search from backend
   const [muscle, setMuscle] = useState('');
   const [category, setCategory] = useState('');
