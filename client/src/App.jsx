@@ -67,12 +67,18 @@ function App() {
 
   return (
     <div id="appContainer">
+
+      {/* DISPLAYS THE LOGO AND PROJECT / APPLICATION NAME */}
+
       <div id="browserLogo">
         <img src="/Shirt Logo Draft.png" alt="Logo" />
         {/* <img src="/l-intro-1630426166.jpg" alt="pic1" />
         <img src="/istockphoto-1322887164-612x612.jpg" alt="pic2" />
         <img src="/no-such-thing-as-a-bad-workout-1.jpg" alt="pic3" /> */}
       </div>
+
+      {/* DISPLAYS THE SEARCH INPUT METHODS */}
+
       <div className="searchContainer">
         <div className="inputContainer">
           <h1>Exercise Search</h1>
@@ -108,6 +114,9 @@ function App() {
           <button id="searchButton" onClick={exerciseSearch}>Search</button>
         </div>
       </div>
+
+      {/* DISPLAYS THE RETURNED EXERCISE RESULTS AS A UNORDERED LIST */}
+      
       <div id="searchResults" className="resultsContainer">
         {responseResults.length > 0 ? ( // if there is 1 or more results in the responseResults array
           <ul>

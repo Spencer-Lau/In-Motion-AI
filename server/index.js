@@ -38,7 +38,6 @@ if (process.env.NODE_ENV === 'production') { // serve static files from the 'bui
   console.log('In development mode, React app is served by React development server');
 }
 
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => { // global error handling middleware
   console.error('Error occurred:', err); // log the full error object for debugging
   const defaultErr = {

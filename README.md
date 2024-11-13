@@ -16,16 +16,38 @@
 - [x] 3.1. Review data flow and refactor
 - [ ] 3.2. Learn Tailwind for styling
 ---
-- [ ] 4.1. Ability to save exercises to a list (e.g., marketList?)
-- [ ] 4.2. Ability to delete exercises from a list (e.g., marketList?)
+- [ ] 4.1. Ability to create and save user accounts (Perhaps using Google OAuth / Google Identity Platform to login and create new user accounts in Supabase)
+- [ ] 4.2. Create a splash / landing page containing the logo and login function
+- [ ] 4.3. All current components for the main screen will render once logged in or if previously logged in, skipping the login page
 ---
-- [ ] 5.1. Ability to create and save user accounts
-- [ ] 5.2. Ability to delete user accounts
+- [ ] 5.1. Create a button to expand a toolbar on the main page
+- [ ] 5.2. Create buttons on the toolbar to logout, delete account, toggle light / dark mode, view saved workouts (none of this is implemented yet)
 ---
-- [ ] 6.1. Ability to save and delete a list to a user's account
+- [ ] 6.1. Create logout function
+- [ ] 6.2. App returns to splash / landing page once logged out
+- [ ] 6.3. Connect to logout button on toolbar
 ---
-- [ ] 7.1. Refactor
-- [ ] 7.2. Tailwind styling
+- [ ] 7.1. Ability to delete user accounts from Supabase
+- [ ] 7.2. May implement loggout function and then delete account info from Supabase
+- [ ] 7.3. Connect to logout button on toolbar
+---
+- [ ] 8.1. Create light / dark mode
+- [ ] 8.2. Connect to light / dark mode button on toolbar
+---
+- [ ] 9.1. Ability to save exercises to a list (e.g., marketList?)
+- [ ] 9.2. Create a button on the right side of each exercise component, the text being a plus
+- [ ] 9.3. The button triggers the save exercises to list function
+- [ ] 9.4. saveExerciseToList renders a new component with a dropdown of existing lists or a + New Exercise List option
+- [ ] 9.5. Selecting an existing list pushes it to the end of the list
+- [ ] 9.6. Selecting a new list pushes the name of the list to the lists category for the user
+- [ ] 9.7. The exercise is pushed to that list (relational tables at this point?)
+---
+- [ ] 10.1. Review plan regarding functionality to delete exercises from lists and to delete lists
+- [ ] 10.2. Ability to delete exercises from a list (e.g., marketList?)
+- [ ] 10.3. Ability to delete a list to a user's account
+---
+- [ ] 11.1. Refactor (AS NEEDED / BENFICIAL)
+- [ ] 11.2. Tailwind styling (AS NEEDED / BENFICIAL)
 
 
 ## ✨ ✨ ✨ REQUEST-RESPONSE CYCLE / DATA FLOW ✨ ✨ ✨
