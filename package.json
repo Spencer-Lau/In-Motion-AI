@@ -5,7 +5,8 @@
   "description": "",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "prod": "concurrently \"npm run build --prefix client\" \"npm run start --prefix server\""
+    "prod": "concurrently \"npm run build --prefix client\" \"npm run start --prefix server\"",
+    "start": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\""
   },
   "author": "",
   "license": "ISC",
