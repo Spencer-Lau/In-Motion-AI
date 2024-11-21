@@ -18,5 +18,8 @@
   "workspaces": [
     "client",
     "server"
-  ]
+  ],
+  "dependencies": {
+    "openai": "^4.73.0"
+  }
 }
