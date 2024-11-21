@@ -65,6 +65,40 @@ function App() {
     }
   };
 
+  // AI functionality
+  const [naturalLanguageQuery, setNaturalLanguageQuery] = useState('');
+  const [aiResponse, setAIResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const naturalLanguageInputRef = useRef(null); // naturalLanguageInputRef, a mutable obj, assigned to the reference obejct of the input DOM element/text input field once rendered
+
+  const aiExerciseSearch = async () => {
+    const naturalLanguageQuery = naturalLanguageInputRef.current.value.trim(); // get the natural language search term
+
+    if (!naturalLanguageQuery) {
+      alert('Please enter a search.');
+      return;  
+    }
+
+    setLoading(true); // Start loading
+    setError(''); // Clear previous errors
+  
+    try {
+      const response = await fetch(`http://localhost:8080/api/aisearch?${naturalLanguageQuery}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ naturalLanguageInputRef,/*id, */ muscle, category }),
+      });
+      if (!response.ok) throw new Error('Failed to fetch data from the server');
+      const data = await response.json();
+      setAIResponse(data); // sets responseResults state with the search results
+      naturalLanguageInputRef.current.value = ''; // resets search box to an empty string after each search
+    } catch (error) {
+      console.error('Error: ', error);
+      alert('Something went wrong with the AI assisted query. Please try again.');
+    }
+  };
+  
   return (
     <div id="appContainer">
 
@@ -112,6 +146,20 @@ function App() {
             ))}
           </select>
           <button id="searchButton" onClick={exerciseSearch}>Search</button>
+
+      {/* AI Assisted Exercise Search Input*/}
+
+          <h1>AI Assisted Exercise Search</h1>
+          <input
+            type="text"
+            id="searchId"
+            placeholder="Search exercises by name"
+            ref={naturalLanguageInputRef} // once this element is rendered, React assigns the input field to searchInputRef.current, allows direct interaction after
+            onKeyDown={(e) => { // search triggers on pressing enter or with button click below
+              if (e.key === 'Enter') aiExerciseSearch();
+            }}
+          />
+          <button id="searchButton" onClick={aiExerciseSearch}>Search</button>
         </div>
       </div>
 

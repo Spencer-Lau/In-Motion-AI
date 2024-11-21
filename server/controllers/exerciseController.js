@@ -2,7 +2,7 @@ import db from '../models/exerciseModels.js';
 
 const exerciseController = {};
 
-exerciseController.searchExercises = async (req, res, next) => { // controller handling exercise search with dynamic query parameters
+export const searchExercises = async (req, res, next) => { // controller handling exercise search with dynamic query parameters
   const { id, muscle, category } = req.query; // get the search parameters from the query
   
   if (!id && !muscle && !category) { // if no filter or search term is provided
@@ -43,7 +43,7 @@ exerciseController.searchExercises = async (req, res, next) => { // controller h
   }
 };
 
-exerciseController.getUniqueMuscles = async (req, res, next) => { // middleware fetches unique muscles for dropdown from database
+export const getUniqueMuscles = async (req, res, next) => { // middleware fetches unique muscles for dropdown from database
   try { // query to get distinct primary muscles
     const query = `SELECT DISTINCT UNNEST(exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL
       UNION
@@ -61,7 +61,7 @@ exerciseController.getUniqueMuscles = async (req, res, next) => { // middleware 
   }
 };
 
-exerciseController.getUniqueCategories = async (req, res, next) => { // middleware fetches unique categories from the database
+export const getUniqueCategories = async (req, res, next) => { // middleware fetches unique categories from the database
   try { // query to get distinct categories
     const query = `SELECT DISTINCT category FROM exercises WHERE category IS NOT NULL`;
     const result = await db.query(query);
@@ -76,5 +76,3 @@ exerciseController.getUniqueCategories = async (req, res, next) => { // middlewa
     });
   }
 };
-
-export default exerciseController;
