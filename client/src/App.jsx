@@ -73,7 +73,7 @@ function App() {
   const naturalLanguageInputRef = useRef(null); // naturalLanguageInputRef, a mutable obj, assigned to the reference obejct of the input DOM element/text input field once rendered
 
   const aiExerciseSearch = async () => {
-    const naturalLanguageQuery = naturalLanguageInputRef.current.value.trim(); // get the natural language search term
+    const naturalLanguageQuery = naturalLanguageInputRef.current?.value.trim(); // get the natural language search term
 
     if (!naturalLanguageQuery) {
       alert('Please enter a search.');
@@ -87,12 +87,13 @@ function App() {
       const response = await fetch(`http://localhost:8080/api/aisearch?${naturalLanguageQuery}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ naturalLanguageInputRef,/*id, */ muscle, category }),
+        body: JSON.stringify({ query: naturalLanguageQuery, id: searchInputRef, muscle, category }),
       });
       if (!response.ok) throw new Error('Failed to fetch data from the server');
       const data = await response.json();
       setAIResponse(data); // sets responseResults state with the search results
       naturalLanguageInputRef.current.value = ''; // resets search box to an empty string after each search
+      searchInputRef.current.value = '';
     } catch (error) {
       console.error('Error: ', error);
       alert('Something went wrong with the AI assisted query. Please try again.');
