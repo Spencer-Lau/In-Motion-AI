@@ -31,10 +31,10 @@ export const testGoldenDataset = async (req, res, next) => {
   const supabaseRecommendations =
     supabaseQueryResult?.map((record) => record.metadata.title) || [];
 
-  const correctRecommendations = supabaseRecommendations?.filter((title) =>
-    goldenTestData.expectedRecommendations.includes(title)
-  );
-
+  const correctRecommendations = Array.isArray(supabaseRecommendations)
+  ? supabaseRecommendations.filter((title) => goldenTestData.expectedRecommendations.includes(title))
+  : [];
+  
   const precision = supabaseRecommendations.length
     ? (correctRecommendations.length / supabaseRecommendations.length) * 100
     : 0;

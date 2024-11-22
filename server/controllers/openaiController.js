@@ -9,6 +9,7 @@ const openai = new OpenAI({
 
 export const openAIQuery = async (req, res, next) => {
   const { userQuery } = res.locals;
+  console.log('openAIQuery userQuery: ', userQuery);
 
   if (!userQuery) {
     const error = {
@@ -24,23 +25,20 @@ export const openAIQuery = async (req, res, next) => {
       messages: [
         {
           role: 'system',
-          content: `Based on the user query "${userQuery}", generate a SQL query to search the "exercises" table. 
-          - The table has columns: "id" (partial matching), "primaryMuscles", "secondaryMuscles", and "category".
-          - Generate a well-rounded selection of exercises if specific columns are not provided in the query.
-          Example SQL:
-          SELECT exercises.* 
-          FROM exercises 
-          WHERE 1=1 
-          AND exercises.id ILIKE $${queryParams.length + 1} 
-          AND (exercises."primaryMuscles" @> $${queryParams.length + 1} 
-          OR exercises."secondaryMuscles" @> $${queryParams.length + 1})`
+          content: `Based on the user query "${userQuery}", generate one legal SQL query to search the "exercises" table. 
+          Example userQuery: "I want to work on my quads", Example SQL: SELECT exercises.* FROM exercises WHERE 1 = 1 and exercises.id ILIKE '%squat%' AND 'quadriceps' = ANY (exercises."primaryMuscles") AND exercises.category = 'strength';`
+          // - The table has columns: "id" (partial matching), "primaryMuscles", "secondaryMuscles", and "category".
+          // - Generate a well-rounded selection of exercises if specific columns are not provided in the query.
           // Muscle groups include: abdominals, abductors, adductors, biceps, calves, chest, forearms, glutes, hamstrings, lats, lower back, middle back, neck, quadriceps, shoulders, traps, triceps.
           // Categories include: cardio, olympic weight lifting, plyometrics, powerlifting, strength, stretching, strongman.
         },
       ],
     });
     
+    console.time('AI Query Time'); // captures execution times for AI query generation and database querying
     const aiQuery = await response?.choices?.[0]?.message?.content?.trim(); // prevents crashes and stops progressing if any part of the chain is null or undefined using the optional chaining operator (?), and sanitizes the string with .trim() only if the preceding chain is a valid string
+    console.timeEnd('AI Query Time');
+    console.log('openAIQuery aiQuery: ', aiQuery);
 
     if (!aiQuery) {
       return next({
@@ -51,7 +49,8 @@ export const openAIQuery = async (req, res, next) => {
     }
     
     res.locals.aiQuery = aiQuery;
-    console.log('aiQuery: ', aiQuery);
+    console.log('openAIQuery aiQuery: ', aiQuery);
+
     return next();
   } catch (error) {
     return next({
@@ -64,6 +63,7 @@ export const openAIQuery = async (req, res, next) => {
 
 export const openAIResponse = async (req, res, next) =>{
   const { aiQuery, supabaseQueryResult, userQuery } = res.locals;
+  console.log('openAIResponse supabaseQueryResult: ', supabaseQueryResult);
 
   if (!aiQuery) {
     const error = {

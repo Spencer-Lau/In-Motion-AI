@@ -14,8 +14,8 @@ function App() {
   const [expandedExerciseId, setExpandedExerciseId] = useState(null); // state to track expanded exercise on hover
 
   useEffect(() => {
-    console.log('Muscle selected:', muscle);  // log muscle selection
-    console.log('Category selected:', category);  // log category selection
+    // console.log('Muscle selected:', muscle);  // log muscle selection
+    // console.log('Category selected:', category);  // log category selection
   }, [muscle, category]); // Re-run this when either muscle or category changes
   
   useEffect(() => { // fetch muscle and category options from backend
@@ -37,23 +37,29 @@ function App() {
     fetchOptions();
   }, []); // empty dependency array means this effect runs once when the component mounts
 
+  const getSearchInputs = () => { // input retrieval helper function
+    return {
+      searchTerm: searchInputRef.current?.value.trim() || '', // get the search term
+      naturalLanguageQuery: naturalLanguageInputRef.current?.value.trim() || '', // get the AI-assist route search term
+    };
+  };
+  
   const exerciseSearch = async () => {
-    const searchInput = searchInputRef.current.value.trim(); // get the search term
+    const { searchTerm } = getSearchInputs();
     const queryParams = {};
     
     // only add the parameters that are non-empty
-    if (searchInput) queryParams.id = searchInput; // include the search term if provided
-    if (muscle && muscle !== "") queryParams.muscle = muscle; // include muscle if selected
-    if (category && category !== "") queryParams.category = category; // include category if selected
+    if (searchTerm) queryParams.id = searchTerm; // include the search term if provided
+    if (muscle) queryParams.muscle = muscle; // include muscle if selected
+    if (category) queryParams.category = category; // include category if selected
 
     if (Object.keys(queryParams).length === 0) { // if no filter or search term is provided, show an alert and stop the search
       alert('Please enter a search term or select a filter');
       return;
     }
 
-    const query = new URLSearchParams(queryParams).toString(); // construct the query string using URLSearchParams
-
     try {
+      const query = new URLSearchParams(queryParams).toString(); // construct the query string using URLSearchParams
       const response = await fetch(`http://localhost:8080/api/search?${query}`);
       if (!response.ok) throw new Error('Failed to fetch data from the server');
       const data = await response.json();
@@ -73,7 +79,12 @@ function App() {
   const naturalLanguageInputRef = useRef(null); // naturalLanguageInputRef, a mutable obj, assigned to the reference obejct of the input DOM element/text input field once rendered
 
   const aiExerciseSearch = async () => {
-    const naturalLanguageQuery = naturalLanguageInputRef.current?.value.trim(); // get the natural language search term
+    const { naturalLanguageQuery, searchTerm } = getSearchInputs();
+
+    const queryParams = { query: naturalLanguageQuery };
+    if (searchTerm) queryParams.id = searchTerm;
+    if (muscle) queryParams.muscle = muscle;
+    if (category) queryParams.category = category;
 
     if (!naturalLanguageQuery) {
       alert('Please enter a search.');
@@ -84,11 +95,18 @@ function App() {
     setError(''); // Clear previous errors
   
     try {
-      const response = await fetch(`http://localhost:8080/api/aisearch?${naturalLanguageQuery}`, {
+      const queryString = new URLSearchParams(queryParams).toString();
+      const response = await fetch(`http://localhost:8080/api/aisearch?${queryString}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: naturalLanguageQuery, id: searchInputRef, muscle, category }),
+        body: JSON.stringify({
+          userQuery: naturalLanguageQuery,
+          id: searchTerm,
+          muscle,
+          category
+        }),
       });
+
       if (!response.ok) throw new Error('Failed to fetch data from the server');
       const data = await response.json();
       setAIResponse(data); // sets responseResults state with the search results
@@ -153,8 +171,8 @@ function App() {
           <h1>AI Assisted Exercise Search</h1>
           <input
             type="text"
-            id="searchId"
-            placeholder="Search exercises by name"
+            id="aiSearchId"
+            placeholder="Search with AI-assisted search and response"
             ref={naturalLanguageInputRef} // once this element is rendered, React assigns the input field to searchInputRef.current, allows direct interaction after
             onKeyDown={(e) => { // search triggers on pressing enter or with button click below
               if (e.key === 'Enter') aiExerciseSearch();
@@ -167,6 +185,7 @@ function App() {
       {/* DISPLAYS THE RETURNED EXERCISE RESULTS AS A UNORDERED LIST */}
       
       <div id="searchResults" className="resultsContainer">
+        {loading && <div>Loading...</div>}
         {responseResults.length > 0 ? ( // if there is 1 or more results in the responseResults array
           <ul>
             {responseResults.map((exercise) => ( // map the array, a list item for each element
@@ -207,6 +226,15 @@ function App() {
           <p>Please search for an exercise</p>
         )}
       </div>
+      
+      {/* DISPLAYS THE AI RESPONSE */}
+      
+      {aiResponse && (
+        <div id="aiResponseContainer">
+          <h2>AI Recommendation</h2>
+          <p>{aiResponse}</p>
+        </div>
+      )}
     </div>
   );
 }

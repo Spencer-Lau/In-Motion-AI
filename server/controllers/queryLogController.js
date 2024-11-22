@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url); // get the current file name
 const __dirname = path.dirname(__filename); // get the directory name
 const queryLogPath = path.resolve(__dirname, '../queryLog.txt'); // path to the log file
 
-export const queryLogger = async (req, rex, next) => {
+export const queryLogger = async (req, res, next) => {
   try{
     const { userQuery, aiQuery, queryResults, openAIResponse } = res.locals; // extract desired data
     const logEntry = `

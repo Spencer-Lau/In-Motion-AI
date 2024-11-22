@@ -30,6 +30,7 @@ export const searchExercises = async (req, res, next) => { // controller handlin
 
   try { // execute query and handle response
     const result = await db.query(query, queryParams); // execute the query with the dynamic conditions
+    // console.log(query, queryParams);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'No exercises found' });
     }

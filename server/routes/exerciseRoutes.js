@@ -33,7 +33,7 @@ router.get(
 );
 
 router.post(
-  '/aisearch',
+  '/api/aisearch',
   parseUserQuery, // extract and validate naturalLanguageQuery input
   openAIQuery, // generate SQL query
   validateGeneratedSQL, // validate AI-generated SQL
