@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'; // import React and 
 import './App.css'; // import App.css/styling
 
 function App() {
+  // const hasFetched = useRef(false); // declare a flag to track fetch status
+
   // const [searchEntry, setSearchEntry] = useState(''); // sets state for searchEntry to user input text (ref: Unit6 TicTacToe)
   const [responseResults, setResponseResults] = useState([]); // sets state for responseResults to results of search from backend
   const [muscle, setMuscle] = useState('');
@@ -13,34 +15,52 @@ function App() {
   const [categoryOptions, setCategoryOptions] = useState([]); // state for category options
   const [expandedExerciseId, setExpandedExerciseId] = useState(null); // state to track expanded exercise on hover
 
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+  // USE FOR DEBUGGING
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
   // useEffect(() => {
   //   // console.log('Muscle selected:', muscle);  // log muscle selection
   //   // console.log('Category selected:', category);  // log category selection
   // }, [muscle, category]); // Re-run this when either muscle or category changes
+
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+  // USED FOR DEBUGGING MULTIPLE MOUNTS OCCURING WITH useEffect FOR setMuscleOptions AND setCategoryOptions
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+  // useEffect(() => {
+  //   console.log('muscleOptions:', muscleOptions);
+  //   console.log('categoryOptions:', categoryOptions);
+  // }, [muscleOptions, categoryOptions]);
   
   useEffect(() => { // fetch muscle and category options from backend
-    if (muscleOptions.length === 0 || categoryOptions.length === 0) { // conditional to only have the dropdown options be called once, once state has an array and length !== 0, fetchOptions will not run and instead be skipped
-      const fetchOptions = async () => {
-        try {
-          const response = await fetch('http://localhost:8080/api/unique-values');
-          if (!response.ok) throw new Error('Failed to fetch options');
-          const data = await response.json();
-          
-          const sortedMuscles = data.muscles.sort((a, b) => a.localeCompare(b)); // sort muscle options
-          const sortedCategories = data.categories.sort((a, b) => a.localeCompare(b)); // sort category options
+    const fetchOptions = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/unique-values');
+        if (!response.ok) throw new Error('Failed to fetch options');
+        const data = await response.json();
+        
+        const sortedMuscles = data.muscles.sort((a, b) => a.localeCompare(b)); // sort muscle options
+        const sortedCategories = data.categories.sort((a, b) => a.localeCompare(b)); // sort category options
 
-          setMuscleOptions(sortedMuscles); // set muscle options/state after sorting
-          setCategoryOptions(sortedCategories); // set category options/state after sorting
-        } catch (error) {
-          console.error('Error fetching options:', error);
-        }
-      };
-      fetchOptions();
-    }
+        setMuscleOptions(sortedMuscles); // set muscle options/state after sorting
+        setCategoryOptions(sortedCategories); // set category options/state after sorting
+
+      } catch (error) {
+        console.error('Error fetching options:', error);
+      }
+    };
+    fetchOptions();
+
+    // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+    // USED FOR DEBUGGING MULTIPLE MOUNTS OCCURING WITH useEffect FOR setMuscleOptions AND setCategoryOptions
+    // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+    // console.log('Component mounted');
+    // return () => {
+    //   console.log('Component unmounted');
+    // };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // empty dependency array means this effect runs once when the component mounts
 
-  // AI functionality
+  // AI FUNCTIONALITY
   const [aiUserQuery, setAIUserQuery] = useState('');
   const [aiResponse, setAIResponse] = useState('');
   const [loading, setLoading] = useState(false);

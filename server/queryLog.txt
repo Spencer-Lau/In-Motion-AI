@@ -52,3 +52,39 @@ Based on the relevance of this exercise to the query and its specific alignment 
     
     ********** ********** ********** End of Query ********** ********** **********
     
+    Natural Language Query: row
+    AI-Generated SQL Query: SELECT exercises.* FROM exercises WHERE exercises.id ILIKE '%squat%' OR exercises.id ILIKE '%curl%' LIMIT $1;
+    Database Query Results: [
+  "One_Leg_Barbell_Squat"
+]
+    AI Response: THIS IS A PLACEHOLDER FOR openai's RESPONSE WHILE THE ACTUAL MVP CODE IS COMMENTED OUT
+    
+    ********** ********** ********** End of Query ********** ********** **********
+    
+    Natural Language Query: row
+    AI-Generated SQL Query: SELECT exercises.* FROM exercises WHERE exercises.id ILIKE '%squat%' OR exercises.id ILIKE '%curl%' LIMIT $1;
+    Database Query Results: [
+  "One_Leg_Barbell_Squat"
+]
+    AI Response: THIS IS A PLACEHOLDER FOR openai's RESPONSE WHILE THE ACTUAL MVP CODE IS COMMENTED OUT
+    
+    ********** ********** ********** End of Query ********** ********** **********
+    
+    Natural Language Query: row
+    AI-Generated SQL Query: SELECT exercises.* FROM exercises WHERE exercises.id ILIKE '%squat%' OR exercises.id ILIKE '%curl%' LIMIT $1;
+    Database Query Results: [
+  "One_Leg_Barbell_Squat"
+]
+    AI Response: THIS IS A PLACEHOLDER FOR openai's RESPONSE WHILE THE ACTUAL MVP CODE IS COMMENTED OUT
+    
+    ********** ********** ********** End of Query ********** ********** **********
+    
+    Natural Language Query: row
+    AI-Generated SQL Query: SELECT exercises.* FROM exercises WHERE exercises.id ILIKE '%squat%' OR exercises.id ILIKE '%curl%' LIMIT $1;
+    Database Query Results: [
+  "One_Leg_Barbell_Squat"
+]
+    AI Response: THIS IS A PLACEHOLDER FOR openai's RESPONSE WHILE THE ACTUAL MVP CODE IS COMMENTED OUT
+    
+    ********** ********** ********** End of Query ********** ********** **********
+    

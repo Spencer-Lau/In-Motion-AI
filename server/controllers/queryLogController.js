@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename); // get the directory name
 const queryLogPath = path.resolve(__dirname, '../queryLog.txt'); // path to the log file
 
 export const queryLogger = async (req, res, next) => {
-  console.log('queryLogController.queryLogger START');
+  // console.log('queryLogController.queryLogger START');
   console.time('queryLogController.queryLogger');
 
   try{
@@ -31,7 +31,7 @@ export const queryLogger = async (req, res, next) => {
 
     fs.appendFileSync(queryLogPath, logEntry); // log entry to queryLog.txt
 
-    console.log('queryLogController.queryLogger END');
+    // console.log('queryLogController.queryLogger END');
     console.timeEnd('queryLogController.queryLogger');
     
     return next();

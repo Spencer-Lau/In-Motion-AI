@@ -10,7 +10,7 @@ export const goldenDataset = [
 ];
 
 export const testGoldenDataset = async (req, res, next) => {
-  console.log('goldenDatasetController.goldenDataset START');
+  // console.log('goldenDatasetController.goldenDataset START');
   console.time('goldenDatasetController.goldenDataset');
 
   const { userQuery, supabaseQueryResult } = res.locals;
@@ -46,7 +46,7 @@ export const testGoldenDataset = async (req, res, next) => {
   console.log('supabaseRecommendations: ', supabaseRecommendations);
   console.log('correctRecommendations: ', correctRecommendations);
 
-  console.log('goldenDatasetController.goldenDataset END');
+  // console.log('goldenDatasetController.goldenDataset END');
   console.timeEnd('goldenDatasetController.goldenDataset');
 
   return next();
