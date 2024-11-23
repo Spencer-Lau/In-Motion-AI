@@ -9,17 +9,20 @@ const __dirname = path.dirname(__filename); // get the directory name
 const queryLogPath = path.resolve(__dirname, '../queryLog.txt'); // path to the log file
 
 export const queryLogger = async (req, res, next) => {
+  console.log('queryLogController.queryLogger START');
+  console.time('queryLogController.queryLogger');
+
   try{
-    const { userQuery, aiQuery, queryResults, openAIResponse } = res.locals; // extract desired data
+    const { userQuery, aiQueryWithLimit, supabaseQueryResult, exerciseRecommendation } = res.locals; // extract desired data
     const logEntry = `
     Natural Language Query: ${userQuery || 'N/A'}
-    AI-Generated SQL Query: ${aiQuery || 'N/A'}
+    AI-Generated SQL Query: ${aiQueryWithLimit || 'N/A'}
     Database Query Results: ${
-      queryResults
-        ? JSON.stringify(queryResults.map((result) => result.id), null, 2)
+      supabaseQueryResult
+        ? JSON.stringify(supabaseQueryResult.map((result) => result.id), null, 2)
         : 'No results'
     }
-    AI Response: ${openAIResponse || 'N/A'}
+    AI Response: ${exerciseRecommendation || 'N/A'}
     
     ********** ********** ********** End of Query ********** ********** **********
     `;
@@ -27,6 +30,10 @@ export const queryLogger = async (req, res, next) => {
     // AI Response: defaults to 'N/A' if a field is missing
 
     fs.appendFileSync(queryLogPath, logEntry); // log entry to queryLog.txt
+
+    console.log('queryLogController.queryLogger END');
+    console.timeEnd('queryLogController.queryLogger');
+    
     return next();
   } catch (error) {
     console.error('Error writing to queryLog.txt:', error);

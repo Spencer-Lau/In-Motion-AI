@@ -13,29 +13,39 @@ function App() {
   const [categoryOptions, setCategoryOptions] = useState([]); // state for category options
   const [expandedExerciseId, setExpandedExerciseId] = useState(null); // state to track expanded exercise on hover
 
-  useEffect(() => {
-    // console.log('Muscle selected:', muscle);  // log muscle selection
-    // console.log('Category selected:', category);  // log category selection
-  }, [muscle, category]); // Re-run this when either muscle or category changes
+  // useEffect(() => {
+  //   // console.log('Muscle selected:', muscle);  // log muscle selection
+  //   // console.log('Category selected:', category);  // log category selection
+  // }, [muscle, category]); // Re-run this when either muscle or category changes
   
   useEffect(() => { // fetch muscle and category options from backend
-    const fetchOptions = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/api/unique-values');
-        if (!response.ok) throw new Error('Failed to fetch options');
-        const data = await response.json();
-        
-        const sortedMuscles = data.muscles.sort((a, b) => a.localeCompare(b)); // sort muscle options
-        const sortedCategories = data.categories.sort((a, b) => a.localeCompare(b)); // sort category options
+    if (muscleOptions.length === 0 || categoryOptions.length === 0) { // conditional to only have the dropdown options be called once, once state has an array and length !== 0, fetchOptions will not run and instead be skipped
+      const fetchOptions = async () => {
+        try {
+          const response = await fetch('http://localhost:8080/api/unique-values');
+          if (!response.ok) throw new Error('Failed to fetch options');
+          const data = await response.json();
+          
+          const sortedMuscles = data.muscles.sort((a, b) => a.localeCompare(b)); // sort muscle options
+          const sortedCategories = data.categories.sort((a, b) => a.localeCompare(b)); // sort category options
 
-        setMuscleOptions(sortedMuscles); // set muscle options/state after sorting
-        setCategoryOptions(sortedCategories); // set category options/state after sorting
-      } catch (error) {
-        console.error('Error fetching options:', error);
-      }
-    };
-    fetchOptions();
+          setMuscleOptions(sortedMuscles); // set muscle options/state after sorting
+          setCategoryOptions(sortedCategories); // set category options/state after sorting
+        } catch (error) {
+          console.error('Error fetching options:', error);
+        }
+      };
+      fetchOptions();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // empty dependency array means this effect runs once when the component mounts
+
+  // AI functionality
+  const [aiUserQuery, setAIUserQuery] = useState('');
+  const [aiResponse, setAIResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState('');
+  const naturalLanguageInputRef = useRef(null); // naturalLanguageInputRef, a mutable obj, assigned to the reference obejct of the input DOM element/text input field once rendered
 
   const getSearchInputs = () => { // input retrieval helper function
     return {
@@ -44,7 +54,7 @@ function App() {
     };
   };
   
-  const exerciseSearch = async () => {
+  const exerciseSearch = async () => { // non-AI assisted exercise search functionality
     const { searchTerm } = getSearchInputs();
     const queryParams = {};
     
@@ -71,50 +81,51 @@ function App() {
     }
   };
 
-  // AI functionality
-  const [naturalLanguageQuery, setNaturalLanguageQuery] = useState('');
-  const [aiResponse, setAIResponse] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const naturalLanguageInputRef = useRef(null); // naturalLanguageInputRef, a mutable obj, assigned to the reference obejct of the input DOM element/text input field once rendered
-
-  const aiExerciseSearch = async () => {
+  const aiExerciseSearch = async () => { // AI-assisted exercise search functionality
+    // eslint-disable-next-line no-unused-vars
     const { naturalLanguageQuery, searchTerm } = getSearchInputs();
 
-    const queryParams = { query: naturalLanguageQuery };
-    if (searchTerm) queryParams.id = searchTerm;
-    if (muscle) queryParams.muscle = muscle;
-    if (category) queryParams.category = category;
+    const queryParams = {}; // initial queryParams object
 
+    // const queryParams = { query: naturalLanguageQuery }; // AI query parameter
+    if (naturalLanguageQuery) queryParams.aiUserQuery = naturalLanguageQuery;
+    // if (searchTerm) queryParams.id = searchTerm;
+    // if (muscle) queryParams.muscle = muscle;
+    // if (category) queryParams.category = category;
+
+    console.log('aiExerciseSearch queryParams: ', queryParams)
     if (!naturalLanguageQuery) {
       alert('Please enter a search.');
-      return;  
+      return;
     }
 
-    setLoading(true); // Start loading
-    setError(''); // Clear previous errors
+    setLoading(true); // start loading
+    // setError(''); // reset any previous errors
   
     try {
-      const queryString = new URLSearchParams(queryParams).toString();
-      const response = await fetch(`http://localhost:8080/api/aisearch?${queryString}`, {
+      const query = new URLSearchParams(queryParams).toString();
+
+      const response = await fetch(`http://localhost:8080/api/aisearch?${query}`, { // fetch AI response from the backend
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userQuery: naturalLanguageQuery,
-          id: searchTerm,
-          muscle,
-          category
+          aiUserQuery: naturalLanguageQuery,
+          // id: searchTerm,
+          // muscle,
+          // category
         }),
       });
 
       if (!response.ok) throw new Error('Failed to fetch data from the server');
       const data = await response.json();
-      setAIResponse(data); // sets responseResults state with the search results
+      setAIResponse(data); // sets responseResults state with AI response data
       naturalLanguageInputRef.current.value = ''; // resets search box to an empty string after each search
       searchInputRef.current.value = '';
     } catch (error) {
       console.error('Error: ', error);
       alert('Something went wrong with the AI assisted query. Please try again.');
+    } finally {
+      setLoading(false); // Stop loading when done
     }
   };
   
@@ -172,8 +183,10 @@ function App() {
           <input
             type="text"
             id="aiSearchId"
+            value={aiUserQuery}
             placeholder="Search with AI-assisted search and response"
-            ref={naturalLanguageInputRef} // once this element is rendered, React assigns the input field to searchInputRef.current, allows direct interaction after
+            ref={naturalLanguageInputRef} // once this element is rendered, React assigns the input field to naturalLanguageInputRef.current, allows direct interaction after
+            onChange={(e) => setAIUserQuery(e.target.value)}
             onKeyDown={(e) => { // search triggers on pressing enter or with button click below
               if (e.key === 'Enter') aiExerciseSearch();
             }}

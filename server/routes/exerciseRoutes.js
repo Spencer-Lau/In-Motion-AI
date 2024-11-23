@@ -1,9 +1,5 @@
 import express from 'express'; // imports express
-import {
-  searchExercises,
-  getUniqueMuscles,
-  getUniqueCategories,
-} from '../controllers/exerciseController.js'; // imports exerciseController module (handles original id/name, muscle dropdown, and category dropdown SQL query generation, db req, and response)
+import { searchExercises, getUniqueMuscles, getUniqueCategories } from '../controllers/exerciseController.js'; // imports exerciseController module (handles original id/name, muscle dropdown, and category dropdown SQL query generation, db req, and response)
 import { parseUserQuery } from '../controllers/userQueryController.js'; // check if user natural language query exists and is a string, can tie in the original search functionality later on
 import {
   openAIQuery,
@@ -33,7 +29,7 @@ router.get(
 );
 
 router.post(
-  '/api/aisearch',
+  '/aisearch',
   parseUserQuery, // extract and validate naturalLanguageQuery input
   openAIQuery, // generate SQL query
   validateGeneratedSQL, // validate AI-generated SQL
