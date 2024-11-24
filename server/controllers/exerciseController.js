@@ -51,46 +51,29 @@ export const searchExercises = async (req, res, next) => { // controller handlin
   }
 };
 
-export const getUniqueMuscles = async (req, res, next) => { // middleware fetches unique muscles for dropdown from database
-  console.time('exerciseController.getUniqueMuscles');
+export const getDropdownOptions = async (req, res, next) => { // middleware fetches unique muscles and categories for dropdown from database
+  console.time('exerciseController.getDropdownOptions');
 
   try { // query to get distinct primary muscles
-    const query = `SELECT DISTINCT UNNEST(exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL
+    const musclesQuery = `SELECT DISTINCT UNNEST(exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL
       UNION
       SELECT DISTINCT UNNEST(exercises."secondaryMuscles") AS muscle FROM exercises WHERE exercises."secondaryMuscles" IS NOT NULL;`;
-    const result = await db.query(query);
+    const musclesResult  = await db.query(musclesQuery);
 
-    req.uniqueMuscles = result.rows.map(row => row.muscle);
+    const categoriesQuery  = `SELECT DISTINCT category FROM exercises WHERE category IS NOT NULL`;
+    const categoriesResult  = await db.query(categoriesQuery );
+    
+    req.uniqueMuscles = musclesResult.rows.map(row => row.muscle);
+    req.uniqueCategories = categoriesResult.rows.map(row => row.category); // attach the unique categories to the request object
 
-    console.timeEnd('exerciseController.getUniqueMuscles');
+    console.timeEnd('exerciseController.getDropdownOptions');
 
     return next();
   } catch (error) {
-    console.error('Error fetching unique muscles:', error);
+    console.error('Error fetching unique muscles and categories:', error);
     return next({
-      log: `Error in exerciseController.getUniqueMuscles: ${error}`,
-      message: { err: 'Error occurred retrieving unique muscles.' },
-    });
-  }
-};
-
-export const getUniqueCategories = async (req, res, next) => { // middleware fetches unique categories from the database
-  console.time('exerciseController.getUniqueCategories');
-
-  try { // query to get distinct categories
-    const query = `SELECT DISTINCT category FROM exercises WHERE category IS NOT NULL`;
-    const result = await db.query(query);
-    
-    req.uniqueCategories = result.rows.map(row => row.category); // attach the unique categories to the request object
-    
-    console.timeEnd('exerciseController.getUniqueCategories');
-
-    return next(); // pass control to the next middleware or route handler
-  } catch (error) {
-    console.error('Error fetching unique categories:', error);
-    return next({
-      log: `Error in exerciseController.getUniqueCategories: ${error}`,
-      message: { err: 'Error occurred retrieving unique categories.' },
+      log: `Error in exerciseController.getDropdownOptions: ${error}`,
+      message: { err: 'Error occurred retrieving unique muscles and cetegories.' },
     });
   }
 };

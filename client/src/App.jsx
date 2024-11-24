@@ -13,6 +13,7 @@ function App() {
 
   const [muscleOptions, setMuscleOptions] = useState([]); // state for muscle options
   const [categoryOptions, setCategoryOptions] = useState([]); // state for category options
+  const [fetchDropdownOptions, setfetchDropdownOptions] = useState(true); // status flag to ensure dropdown options data only occurs once
   const [expandedExerciseId, setExpandedExerciseId] = useState(null); // state to track expanded exercise on hover
 
   // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
@@ -32,6 +33,7 @@ function App() {
   // }, [muscleOptions, categoryOptions]);
   
   useEffect(() => { // fetch muscle and category options from backend
+    if (!fetchDropdownOptions) return;
     const fetchOptions = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/unique-values');
@@ -43,9 +45,10 @@ function App() {
 
         setMuscleOptions(sortedMuscles); // set muscle options/state after sorting
         setCategoryOptions(sortedCategories); // set category options/state after sorting
-
+        setfetchDropdownOptions(false); // set status flag to false after fetching data once
       } catch (error) {
         console.error('Error fetching options:', error);
+        setfetchDropdownOptions(false); // set status flag to false even if an error occurs
       }
     };
     fetchOptions();
