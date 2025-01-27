@@ -11,12 +11,12 @@ export const goldenDataset = [
 
 export const testGoldenDataset = async (req, res, next) => {
   // console.log('goldenDatasetController.goldenDataset START');
-  console.time('goldenDatasetController.goldenDataset');
+  // console.time('goldenDatasetController.goldenDataset');
 
   const { userQuery, supabaseQueryResult } = res.locals;
   
   // console.log('userQuery: ', userQuery);
-  console.log('goldenDataset.testInput: ', goldenDataset[0].testInput);
+  // console.log('goldenDataset.testInput: ', goldenDataset[0].testInput);
 
   const goldenTestData = goldenDataset.find((dataEntry) => // find the object in goldenDataset with a summary matching the userQuery
     userQuery.includes(dataEntry.testInput)
@@ -42,12 +42,13 @@ export const testGoldenDataset = async (req, res, next) => {
     ? (correctRecommendations.length / supabaseRecommendations.length) * 100
     : 0;
 
-  console.log('precision: ', precision);
-  console.log('supabaseRecommendations: ', supabaseRecommendations);
-  console.log('correctRecommendations: ', correctRecommendations);
+  // console.log('precision: ', precision);
+  // console.log('supabaseRecommendations: ', supabaseRecommendations);
+  // console.log('correctRecommendations: ', correctRecommendations);
 
   // console.log('goldenDatasetController.goldenDataset END');
-  console.timeEnd('goldenDatasetController.goldenDataset');
+  // console.timeEnd('goldenDatasetController.goldenDataset');
+  // console.log('Data in res.locals: ', JSON.stringify(res.locals, null, 2));
 
   return next();
 };

@@ -1,6 +1,6 @@
 export const parseUserQuery = async (req, res, next) => {
   // console.log('userQueryController.parseUserQuery START');
-  console.time('userQueryController.parseUserQuery');
+  // console.time('userQueryController.parseUserQuery');
 
   const { aiUserQuery/*, id, muscle, category*/ } = req.body; // extract userQuery and optional query parameters from res.body
   // console.log('parseUserQuery aiUserQuery: ', aiUserQuery);
@@ -22,7 +22,8 @@ export const parseUserQuery = async (req, res, next) => {
   // res.locals.category = category || null; // default to null if not provided
 
   // console.log('userQueryController.parseUserQuery END');
-  console.timeEnd('userQueryController.parseUserQuery');
+  // console.timeEnd('userQueryController.parseUserQuery');
+  // console.log('Data in res.locals: ', JSON.stringify(res.locals, null, 2));
 
   return next();
 }

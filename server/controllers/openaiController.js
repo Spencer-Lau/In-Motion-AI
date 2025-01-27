@@ -5,12 +5,12 @@ dotenv.config();
 
 const openai = new OpenAI({
   // organization: process.env.OPENAI_ORG_ID,
-  apiKey: process.env.OPENAI_API_KEY,
+  // apiKey: process.env.OPENAI_API_KEY,
 });
 
 export const openAIQuery = async (req, res, next) => {
   // console.log('openaiController.openAIQuery START');
-  console.time('openaiController.openAIQuery');
+  // console.time('openaiController.openAIQuery');
 
   const { userQuery } = res.locals;
   // console.log('openAIQuery userQuery: ', userQuery);
@@ -86,7 +86,8 @@ export const openAIQuery = async (req, res, next) => {
 
     // console.log('openAIQuery aiQueryWithLimit: ', aiQueryWithLimit);
     // console.log('openaiController.openAIQuery END');
-    console.timeEnd('openaiController.openAIQuery');
+    // console.timeEnd('openaiController.openAIQuery');
+    // console.log('Data in res.locals: ', JSON.stringify(res.locals, null, 2));
 
     return next();
   } catch (error) {
@@ -100,11 +101,11 @@ export const openAIQuery = async (req, res, next) => {
 
 export const openAIResponse = async (req, res, next) =>{
   // console.log('openaiController.openAIResponse START');
-  console.time('openaiController.openAIResponse');
+  // console.time('openaiController.openAIResponse');
 
   const { aiQueryWithLimit, supabaseQueryResult, userQuery } = res.locals;
 
-  console.log('openAIResponse supabaseQueryResult: ', supabaseQueryResult);
+  // console.log('openAIResponse supabaseQueryResult: ', supabaseQueryResult);
 
   if (!aiQueryWithLimit) {
     const error = {
@@ -165,7 +166,8 @@ export const openAIResponse = async (req, res, next) =>{
     res.locals.exerciseRecommendation = exerciseRecommendation;
 
     // console.log('openaiController.openAIResponse END');
-    console.timeEnd('openaiController.openAIResponse');
+    // console.timeEnd('openaiController.openAIResponse');
+    // console.log('Data in res.locals: ', JSON.stringify(res.locals, null, 2));
 
     return next();
   } catch (err) {

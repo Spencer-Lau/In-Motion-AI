@@ -3,7 +3,7 @@ import db from '../models/exerciseModels.js';
 const exerciseController = {};
 
 export const searchExercises = async (req, res, next) => { // controller handling exercise search with dynamic query parameters
-  console.time('exerciseController.searchExercises');
+  // console.time('exerciseController.searchExercises');
 
   const { id, muscle, category } = req.query; // get the search parameters from the query
   
@@ -30,18 +30,25 @@ export const searchExercises = async (req, res, next) => { // controller handlin
     queryParams.push(category); // assuming `category` is a string (e.g., 'strength')
   }
 
+  query += ` LIMIT 1;`; // hard coded LIMIT to 1 for testing/debugging purposes, REMOVE AFTERWARDS FOR PRODUCTION
+
   try { // execute query and handle response
     const result = await db.query(query, queryParams); // execute the query with the dynamic conditions
 
     // console.log(query, queryParams);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'No exercises found' });
+      return next();
+      // return res.status(404).json({ message: 'No exercises found' });
     }
 
-    console.timeEnd('exerciseController.searchExercises');
+    req.queryResults = result.rows
 
-    return res.json(result.rows); // return the matching exercises
+    // console.timeEnd('exerciseController.searchExercises');
+    console.log('Data being passed to next middleware:', req.queryResults); // log query results
+
+    return next();
+    // return res.json(result.rows); // return the matching exercises
   } catch (error) {
     console.error('Search error:', error);
     return next({
@@ -52,12 +59,10 @@ export const searchExercises = async (req, res, next) => { // controller handlin
 };
 
 export const getDropdownOptions = async (req, res, next) => { // middleware fetches unique muscles and categories for dropdown from database
-  console.time('exerciseController.getDropdownOptions');
+  // console.time('exerciseController.getDropdownOptions');
 
   try { // query to get distinct primary muscles
-    const musclesQuery = `SELECT DISTINCT UNNEST(exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL
-      UNION
-      SELECT DISTINCT UNNEST(exercises."secondaryMuscles") AS muscle FROM exercises WHERE exercises."secondaryMuscles" IS NOT NULL;`;
+    const musclesQuery = `SELECT DISTINCT UNNEST(exercises."primaryMuscles") AS muscle FROM exercises WHERE exercises."primaryMuscles" IS NOT NULL UNION SELECT DISTINCT UNNEST(exercises."secondaryMuscles") AS muscle FROM exercises WHERE exercises."secondaryMuscles" IS NOT NULL;`;
     const musclesResult  = await db.query(musclesQuery);
 
     const categoriesQuery  = `SELECT DISTINCT category FROM exercises WHERE category IS NOT NULL`;
@@ -66,14 +71,14 @@ export const getDropdownOptions = async (req, res, next) => { // middleware fetc
     req.uniqueMuscles = musclesResult.rows.map(row => row.muscle);
     req.uniqueCategories = categoriesResult.rows.map(row => row.category); // attach the unique categories to the request object
 
-    console.timeEnd('exerciseController.getDropdownOptions');
+    // console.timeEnd('exerciseController.getDropdownOptions');
 
     return next();
   } catch (error) {
     console.error('Error fetching unique muscles and categories:', error);
     return next({
       log: `Error in exerciseController.getDropdownOptions: ${error}`,
-      message: { err: 'Error occurred retrieving unique muscles and cetegories.' },
+      message: { err: 'Error occurred retrieving unique muscles and categories.' },
     });
   }
 };

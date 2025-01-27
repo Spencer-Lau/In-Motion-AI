@@ -33,7 +33,8 @@ export const queryLogger = async (req, res, next) => {
 
     // console.log('queryLogController.queryLogger END');
     console.timeEnd('queryLogController.queryLogger');
-    
+    console.log('Data in res.locals: ', JSON.stringify(res.locals, null, 2));
+
     return next();
   } catch (error) {
     console.error('Error writing to queryLog.txt:', error);

@@ -36,7 +36,7 @@ function App() {
     if (!fetchDropdownOptions) return;
     const fetchOptions = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/unique-values');
+        const response = await fetch('http://localhost:8080/api/dropdown-options');
         if (!response.ok) throw new Error('Failed to fetch options');
         const data = await response.json();
         

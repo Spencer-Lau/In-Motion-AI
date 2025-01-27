@@ -1,6 +1,6 @@
 export const validateGeneratedSQL = (req, res, next) => {
   // console.log('validateController.validateGeneratedSQL START');
-  console.time('validateController.validateGeneratedSQL');
+  // console.time('validateController.validateGeneratedSQL');
 
   const { aiQueryWithLimit } = res.locals;
 
@@ -37,7 +37,8 @@ export const validateGeneratedSQL = (req, res, next) => {
   }
 
   // console.log('validateController.validateGeneratedSQL END');
-  console.timeEnd('validateController.validateGeneratedSQL');
-  
+  // console.timeEnd('validateController.validateGeneratedSQL');
+  // console.log('Data in res.locals: ', JSON.stringify(res.locals, null, 2));
+
   return next();
 }

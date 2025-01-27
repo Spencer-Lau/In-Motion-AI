@@ -12,15 +12,22 @@ import { queryLogger } from '../controllers/queryLogController.js'; // create lo
 
 const router = express.Router(); // imports Router() from Express
 
-router.get('/search', searchExercises); // route searching exercises based on id, muscle, and category
+router.get('/search', searchExercises, (req, res) => { // route searching exercises based on id, muscle, and category
+  if (!req.queryResults) { // if queryResults does not exist, i.e., database was unsuccessfully queried
+    return res.status(400).json({ message: 'No search results found.' });
+  }
+  console.log(`req.queryResults: `, req.queryResults);
+  return res.status(200).json(req.queryResults); // respond with the query results if they exist
+});
 
 router.get(
-  '/unique-values',
+  '/dropdown-options',
   getDropdownOptions,
-  (req, res) => {
-    // route fetches unique muscles and categories
-    res.json({
-      // if both middlewares run without errors, send the response
+  (req, res) => { // route fetches unique muscles and categories
+    if (!req.uniqueMuscles || !req.uniqueCategories) { // if either set of dropdown options is not retireved successfully
+      return res.status(400).json({ message: 'Error retrieving dropdown options.' });
+    }
+    res.status(200).json({ // if middleware runs without errors, send the response
       muscles: req.uniqueMuscles,
       categories: req.uniqueCategories,
     });
@@ -35,7 +42,11 @@ router.post(
   queryExercisesDatabase, // query database
   testGoldenDataset, // compare results to golden dataset
   openAIResponse, // shape database response individualized to user input
-  queryLogger // log user and AI queries and database and AI results
+  queryLogger, // log user and AI queries and database and AI results
+  (req, res) => {
+    console.log(`res.locals.supabaseQueryResult: `, res.locals.supabaseQueryResult);
+    return res.status(200).json(res.locals.supabaseQueryResult); // respond with the query results if they exist
+  }
 );
 
 export default router;
