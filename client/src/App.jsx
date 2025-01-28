@@ -1,3 +1,5 @@
+// contains the app's overall structure and routing logic
+
 import React, { useState, useRef, useEffect } from 'react'; // import React and useState (to manage state) and useRef (creates a reference) React hooks
 import './App.css'; // import App.css/styling
 

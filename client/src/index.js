@@ -1,3 +1,7 @@
+// entry point to the app
+// renders the root ReactDOM node into the DOM
+// wraps the app with context providers, e.g., React, Redux, or theme providers
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
